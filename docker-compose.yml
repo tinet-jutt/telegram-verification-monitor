@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  telegram-monitor:
+    build: 
+      context: .
+      args:
+        - HTTP_PROXY=${HTTP_PROXY:-}
+        - HTTPS_PROXY=${HTTPS_PROXY:-}
+        - SOCKS_PROXY=${SOCKS_PROXY:-}
+        - ALL_PROXY=${ALL_PROXY:-}
+        - NO_PROXY=${NO_PROXY:-}
+    container_name: telegram-code-monitor
+    restart: unless-stopped
+    environment:
+      - TELEGRAM_API_ID=${TELEGRAM_API_ID}
+      - TELEGRAM_API_HASH=${TELEGRAM_API_HASH}
+      - BASE_SERVICE_URL=${BASE_SERVICE_URL}
+      # 网络代理配置
+      - HTTP_PROXY=${HTTP_PROXY:-}
+      - HTTPS_PROXY=${HTTPS_PROXY:-}
+      - http_proxy=${HTTP_PROXY:-}
+      - https_proxy=${HTTPS_PROXY:-}
+      - SOCKS_PROXY=${SOCKS_PROXY:-}
+      - socks_proxy=${SOCKS_PROXY:-}
+      - ALL_PROXY=${ALL_PROXY:-}
+      - all_proxy=${ALL_PROXY:-}
+      - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1,::1}
+      - no_proxy=${NO_PROXY:-localhost,127.0.0.1,::1}
+    volumes:
+      # 持久化session文件
+      - ./data:/app/data
+      # 持久化日志文件
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    # 如果需要网络访问，可以取消注释
+    # networks:
+    #   - telegram-net
+    # 如果需要暴露端口，可以取消注释
+    # ports:
+    #   - "8080:8080"
+
+# 如果需要自定义网络，可以取消注释
+# networks:
+#   telegram-net:
+#     driver: bridge
+
+volumes:
+  telegram-data:
+    driver: local
+  telegram-logs:
+    driver: local

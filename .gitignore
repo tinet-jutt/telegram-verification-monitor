@@ -1,0 +1,80 @@
+# 环境变量文件（包含敏感信息）
+.env
+.env.local
+.env.production
+.env.staging
+
+# 日志文件
+*.log
+logs/
+*.log.*
+
+# 数据文件（可能包含用户数据）
+data/
+*.session
+*.session-journal
+
+# Python 相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE 相关
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统相关
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker 相关
+.dockerignore
+
+# 临时文件
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# 测试覆盖率
+.coverage
+.pytest_cache/
+htmlcov/
+
+# 其他
+*.pid
+*.seed
+*.pid.lock
