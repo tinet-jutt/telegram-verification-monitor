@@ -1,21 +1,22 @@
-# Telegram验证码监听服务
+# Telegram 验证码监听服务
 
-这是一个基于Docker的Telegram验证码自动监听和转发服务，可以监听Telegram官方发送的验证码并自动转发到指定的服务URL。
+这是一个基于 Docker 的 Telegram 验证码自动监听和转发服务，可以监听 Telegram 官方发送的验证码并自动转发到指定的服务 URL。
 
 ## 功能特性
 
 - 🔄 **自动登录**: 启动时自动检查登录状态，未授权时自动引导登录
-- 📁 **日志轮转**: 自动管理日志文件大小，限制为1MB并保留3个备份
-- 🎯 **验证码监听**: 实时监听Telegram官方(ID: 777000)的验证码消息
-- 🌐 **自动转发**: 检测到验证码后自动发送到指定服务URL
+- 📁 **日志轮转**: 自动管理日志文件大小，限制为 1MB 并保留 3 个备份
+- 🎯 **验证码监听**: 实时监听 Telegram 官方(ID: 777000)的验证码消息
+- 🌐 **自动转发**: 检测到验证码后自动发送到指定服务 URL
 - 🔍 **智能提取**: 支持多种验证码格式的正则表达式匹配
-- 🐳 **Docker化**: 完全容器化部署，环境隔离
+- 🐳 **Docker 化**: 完全容器化部署，环境隔离
 
 ## 快速开始
 
 ### 1. 准备工作
 
-1. 获取Telegram API凭据：
+1. 获取 Telegram API 凭据：
+
    - 访问 https://my.telegram.org/apps
    - 创建应用并获取 `api_id` 和 `api_hash`
 
@@ -24,11 +25,13 @@
 ### 2. 配置环境变量
 
 复制环境变量模板：
+
 ```bash
 cp .env.example .env
 ```
 
 编辑 `.env` 文件，填入你的配置：
+
 ```env
 # Telegram API 配置
 TELEGRAM_API_ID=your_api_id_here
@@ -83,7 +86,7 @@ docker-compose restart
 docker-compose logs -f telegram-monitor
 ```
 
-### 直接使用Docker
+### 直接使用 Docker
 
 ```bash
 # 构建镜像
@@ -116,38 +119,59 @@ docker run -d \
 
 ## 环境变量说明
 
-| 变量名 | 必需 | 说明 |
-|--------|------|------|
-| `TELEGRAM_API_ID` | ✅ | Telegram API ID |
-| `TELEGRAM_API_HASH` | ✅ | Telegram API Hash |
-| `BASE_SERVICE_URL` | ✅ | 验证码转发的目标URL |
+### 必需变量
+
+| 变量名              | 必需 | 说明                 |
+| ------------------- | ---- | -------------------- |
+| `TELEGRAM_API_ID`   | ✅   | Telegram API ID      |
+| `TELEGRAM_API_HASH` | ✅   | Telegram API Hash    |
+| `BASE_SERVICE_URL`  | ✅   | 验证码转发的目标 URL |
+
+### 代理配置（可选）
+
+#### Telegram 客户端专用代理
+
+| 变量名                    | 说明               | 示例                       |
+| ------------------------- | ------------------ | -------------------------- |
+| `TELEGRAM_PROXY_TYPE`     | 代理类型           | `socks5`, `socks4`, `http` |
+| `TELEGRAM_PROXY_ADDR`     | 代理地址           | `127.0.0.1`                |
+| `TELEGRAM_PROXY_PORT`     | 代理端口           | `1080`                     |
+| `TELEGRAM_PROXY_USERNAME` | 代理用户名（可选） | `username`                 |
+| `TELEGRAM_PROXY_PASSWORD` | 代理密码（可选）   | `password`                 |
+| `TELEGRAM_PROXY_RDNS`     | 远程 DNS 解析      | `true` (推荐)              |
+
+详细配置请参考 [Telethon](https://docs.telethon.dev/en/stable/basic/signing-in.html#signing-in-behind-a-proxy)
 
 ## 验证码格式支持
 
 服务支持以下验证码格式：
+
 - `**Login code:** 35628`
 - `Login code: 35628`
 - `Your login code is 35628`
 - `35628 is your Telegram code`
 - `code: 35628`
 - `验证码: 35628`
-- 纯5位数字
+- 纯 5 位数字
 
 ## 故障排除
 
 ### 1. 权限问题
+
 ```bash
 # 确保目录权限正确
 chmod 755 data logs
 ```
 
 ### 2. 登录问题
+
 ```bash
 # 重新登录
 docker-compose run --rm telegram-monitor python login.py
 ```
 
 ### 3. 查看详细日志
+
 ```bash
 # 查看容器日志
 docker-compose logs telegram-monitor
@@ -156,7 +180,8 @@ docker-compose logs telegram-monitor
 tail -f logs/telegram.log
 ```
 
-### 4. 重置session
+### 4. 重置 session
+
 ```bash
 # 删除session文件重新登录
 rm -f data/session_auto_jd.session*
@@ -165,10 +190,11 @@ docker-compose run --rm telegram-monitor python login.py
 
 ## 注意事项
 
-1. **首次使用**: 必须先运行登录脚本完成Telegram授权
-2. **数据持久化**: session文件和日志文件通过volume挂载，容器重启不会丢失
-3. **网络访问**: 容器需要能够访问Telegram服务器和目标服务URL
-4. **安全性**: 请妥善保管API凭据，不要泄露给他人
+1. **首次使用**: 必须先运行登录脚本完成 Telegram 授权
+2. **数据持久化**: session 文件和日志文件通过 volume 挂载，容器重启不会丢失
+3. **网络访问**: 容器需要能够访问 Telegram 服务器和目标服务 URL
+4. **代理配置**: 如果需要通过代理访问 Telegram，请参考 [PROXY_SETUP.md](PROXY_SETUP.md) 配置代理
+5. **安全性**: 请妥善保管 API 凭据，不要泄露给他人
 
 ## 许可证
 

@@ -3,3 +3,4 @@ requests==2.31.0
 cryptg==0.4.0
 requests[socks]==2.31.0
 pysocks==1.7.1
+python-socks[asyncio]==2.4.3
